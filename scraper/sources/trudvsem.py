@@ -9,7 +9,7 @@ from ..common import Vacancy, clean_company, excerpt, fetch, html_to_text, log, 
 
 API = "http://opendata.trudvsem.ru/api/v1/vacancies/region/{region}"
 QUERIES = config.TRUDVSEM_QUERIES + [
-    "экономист", "финансист", "финансовый аналитик", "аудитор", "бухгалтер", "кредитный специалист",
+    "экономист", "финансист", "финансовый аналитик", "аудитор", "кредитный специалист",
     "специалист банка", "аналитик", "казначей", "риск",
 ]
 
@@ -39,7 +39,9 @@ def collect(session):
         duty = html_to_text(v.get("duty") or "")
         reqs = html_to_text(v.get("requirements") or "")
         text = f"{title}\n{duty}\n{reqs}\n{(v.get('category') or {}).get('specialisation', '')}"
-        if classify.is_excluded_title(title) or classify.is_senior_title(title):
+        company = clean_company((v.get("company") or {}).get("name"))
+        emp_known, _ = classify.find_employer(company or "")
+        if classify.is_excluded_title(title, emp_known) or classify.is_senior_title(title):
             continue
         try:
             exp_years = int(exp) if exp is not None else 0
@@ -48,9 +50,7 @@ def collect(session):
         if exp_years >= 2 or (exp_years == 1 and not classify.is_junior(title)):
             continue
         spec = (v.get("category") or {}).get("specialisation", "")
-        company = clean_company((v.get("company") or {}).get("name"))
-        emp_known, _ = classify.find_employer(company or "")
-        fin_spec = re.search(r"банк|финанс|бухгалт|страхов|консалтинг|инвест", spec, re.I)
+        fin_spec = re.search(r"банк|финанс|страхов|консалтинг|инвест", spec, re.I)
         if not (classify.is_finance(title) or (fin_spec and classify.is_finance_desc(text, 1))
                 or classify.is_finance_vacancy(title, "", emp_known)):
             continue

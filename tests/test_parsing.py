@@ -46,6 +46,23 @@ class ClassifyTest(unittest.TestCase):
         self.assertIn("Официальное оформление", c)
 
 
+class ProfileTest(unittest.TestCase):
+    def test_accounting_excluded(self):
+        for t in ("Бухгалтер", "Младший бухгалтер по МСФО", "Помощник бухгалтера", "Бухгалтер-стажер"):
+            self.assertTrue(classify.is_excluded_title(t, "ВТБ"), t)
+
+    def test_data_analysts_only_in_banks(self):
+        self.assertFalse(classify.is_excluded_title("Стажер-Data Analyst", "Сбер"))
+        self.assertFalse(classify.is_excluded_title("Стажёр аналитик данных", "Московская биржа"))
+        self.assertTrue(classify.is_excluded_title("Стажёр дата-аналитик", "X5"))
+        self.assertTrue(classify.is_excluded_title("Стажер Data Analytics", "Procter & Gamble"))
+        self.assertTrue(classify.is_excluded_title("Стажер аналитик данных", None))
+
+    def test_finance_roles_kept(self):
+        for t in ("Стажер аудита финансовых учреждений", "Аналитик по финансовой отчетности", "Экономист"):
+            self.assertFalse(classify.is_excluded_title(t, None), t)
+
+
 class ExtractTest(unittest.TestCase):
     POST = ("Стажер в отдел M&A / Альфа-Банк\n\nОбязанности: финансовое моделирование, оценка компаний.\n"
             "Требования: студент 3-4 курса, Excel.\nУсловия: гибрид, 30 часов в неделю, 70 000 ₽. Москва.\n"

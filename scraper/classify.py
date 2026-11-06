@@ -99,9 +99,14 @@ def requires_experience(text: str) -> bool:
     return any(re.search(p, low) for p in config.SENIOR_PATTERNS[:2] + config.SENIOR_PATTERNS[6:7])
 
 
-def is_excluded_title(title: str) -> bool:
+def is_excluded_title(title: str, employer: str | None = None) -> bool:
+    """Нерелевантная позиция. Data/продуктовые аналитики проходят только в банках и инвесткомпаниях."""
     low = f" {title.lower()} "
-    return _has_any(low, config.EXCLUDE_TITLE_KEYWORDS)
+    if _has_any(low, config.EXCLUDE_TITLE_KEYWORDS):
+        return True
+    if _has_any(low, config.BANK_ONLY_TITLE_KEYWORDS):
+        return sector_of(employer) not in config.PRIORITY_SECTORS
+    return False
 
 
 def location_ok(text: str) -> bool:

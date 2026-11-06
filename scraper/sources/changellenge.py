@@ -63,7 +63,7 @@ def _detail(session, path: str) -> Vacancy | None:
     city = meta.get("Город", "")
     if city and "москв" not in city.lower() and "удал" not in city.lower():
         return None
-    if classify.is_excluded_title(title) or classify.is_senior_title(title):
+    if classify.is_excluded_title(title, employer) or classify.is_senior_title(title):
         return None
     exp = meta.get("Опыт", "").lower()
     if exp and "нет" not in exp and not classify.is_junior(title):

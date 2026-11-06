@@ -8,7 +8,7 @@ from .common import Vacancy, clean_line, excerpt, make_id, parse_conditions, par
 
 ROLE_WORDS = re.compile(
     r"стаж[её]р|стажиров|intern|trainee|практикант|аналитик|analyst|экономист|менеджер|manager|"
-    r"специалист|specialist|ассистент|assistant|консультант|consultant|бухгалтер|аудитор|auditor|"
+    r"специалист|specialist|ассистент|assistant|консультант|consultant|аудитор|auditor|"
     r"associate|финансист|казначе|риск|андеррайтер|актуарий|трейдер|брокер|юниор|junior|младш|"
     r"помощник|эксперт|operations|операционист|кредитн",
     re.I,
@@ -37,7 +37,7 @@ DEADLINE_RE = re.compile(
 
 TITLE_ROLE = re.compile(
     r"стаж[её]р|стажиров|intern|trainee|практикант|аналитик|analyst|экономист|менеджер|manager|"
-    r"специалист|specialist|ассистент|assistant|консультант|consultant|бухгалтер|аудитор|auditor|"
+    r"специалист|specialist|ассистент|assistant|консультант|consultant|аудитор|auditor|"
     r"associate|финансист|казначе|риск|андеррайтер|актуари|трейдер|брокер|junior|джуниор|младш|"
     r"помощник|операционист|кредитн\w+ эксперт|программ\w+ (?:стажиров|для студент|для выпускник|развития)|"
     r"graduate|оценщик|контролер|контролёр|экономическ",
@@ -127,7 +127,7 @@ def relevant(text: str, title: str, employer: str | None, *, item: bool = False)
         return False
     if is_event_title(title) or title.endswith("!"):
         return False
-    if classify.is_excluded_title(title) or classify.is_senior_title(title):
+    if classify.is_excluded_title(title, employer) or classify.is_senior_title(title):
         return False
     if not item and not STRONG_SIGNALS.search(text):
         return False

@@ -66,12 +66,12 @@ def collect(session):
         snip = it.get("snippet") or {}
         text = f"{title}\n{html_to_text(snip.get('requirement') or '')}\n{html_to_text(snip.get('responsibility') or '')}"
         exp = (it.get("experience") or {}).get("id")
-        if classify.is_excluded_title(title) or classify.is_senior_title(title):
+        employer = clean_company((it.get("employer") or {}).get("name"))
+        known, _ = classify.find_employer(employer or "")
+        if classify.is_excluded_title(title, known) or classify.is_senior_title(title):
             continue
         if exp != "noExperience" and not classify.is_junior(title):
             continue
-        employer = clean_company((it.get("employer") or {}).get("name"))
-        known, _ = classify.find_employer(employer or "")
         salary, lo, hi = _fmt_salary(it.get("salary_range") or it.get("salary"))
         conditions = []
         for key in ("schedule", "employment", "employment_form"):

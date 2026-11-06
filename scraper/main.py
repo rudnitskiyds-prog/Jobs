@@ -15,7 +15,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from xml.sax.saxutils import escape
 
-from . import config, notify
+from . import classify, config, notify
 from .common import log, make_session, now_iso
 from .sources import changellenge, futru, hh, telegram, trudvsem, vk
 
@@ -82,6 +82,9 @@ def merge(fresh, existing: dict[str, dict], run_ts: str, ran_sources: set[str]):
     keep_after = now - timedelta(days=config.KEEP_DAYS)
     for vid, d in existing.items():
         if vid in out:
+            continue
+        # правила отбора могли измениться с прошлого запуска
+        if classify.is_excluded_title(d.get("title", ""), d.get("employer")):
             continue
         try:
             last = datetime.fromisoformat(d.get("last_seen") or d.get("first_seen"))
