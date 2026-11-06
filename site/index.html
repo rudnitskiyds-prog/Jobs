@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Финстарт Москва</title>
+<meta name="description" content="Стажировки и вакансии без опыта в банках, инвестициях и финансах Москвы. Обновляется каждый день.">
+<link rel="alternate" type="application/rss+xml" title="Финстарт Москва" href="feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@600;700&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top__row">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true">₽</span>
+      <div>
+        <h1 class="brand__name">Финстарт <span>Москва</span></h1>
+        <p class="brand__sub">Стажировки и работа без опыта в банках, инвестициях и финансах</p>
+      </div>
+    </div>
+    <div class="updated" id="updated">Загрузка…</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="summary" aria-label="Сводка">
+    <div class="stat"><span class="stat__num" id="s-total">—</span><span class="stat__label">актуальных предложений</span></div>
+    <div class="stat stat--new"><span class="stat__num" id="s-new">—</span><span class="stat__label">новых за сутки</span></div>
+    <div class="stat"><span class="stat__num" id="s-bank">—</span><span class="stat__label">банки и инвестиции</span></div>
+    <div class="stat"><span class="stat__num" id="s-salary">—</span><span class="stat__label">с указанной з/п</span></div>
+  </section>
+
+  <section class="controls" aria-label="Фильтры">
+    <div class="search">
+      <label for="q" class="sr">Поиск</label>
+      <input id="q" type="search" placeholder="Должность, компания, подразделение: «аудит», «Сбер», «M&A»…" autocomplete="off">
+    </div>
+    <div class="filters">
+      <div class="group" role="group" aria-label="Сектор" id="f-sector"></div>
+      <div class="group" role="group" aria-label="Тип" id="f-kind"></div>
+      <div class="row">
+        <label class="toggle"><input type="checkbox" id="f-new"> Только новые (48 ч)</label>
+        <label class="toggle"><input type="checkbox" id="f-salary"> С зарплатой</label>
+        <label class="toggle"><input type="checkbox" id="f-fav"> Избранное</label>
+        <label class="toggle"><input type="checkbox" id="f-hidden"> Показать скрытые</label>
+        <label class="select">Источник
+          <select id="f-source"><option value="">все</option></select>
+        </label>
+        <label class="select">Сортировка
+          <select id="f-sort">
+            <option value="priority">банки и инвестиции выше</option>
+            <option value="date">сначала свежие</option>
+            <option value="salary">по зарплате</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <p class="count" id="count" aria-live="polite"></p>
+  <ul class="list" id="list"></ul>
+  <p class="empty" id="empty" hidden>Под эти фильтры сейчас ничего нет. Снимите часть фильтров или загляните завтра: база обновляется каждое утро.</p>
+</main>
+
+<footer class="foot wrap">
+  <p>Источники: Changellenge&nbsp;&gt;&gt;, Future Today, Telegram-каналы карьерных центров и банков, паблики VK, hh.ru, «Работа России». Подписка на новые вакансии: <a href="feed.xml">RSS</a> или Telegram-бот (см. README).</p>
+  <p>Перед откликом проверяйте актуальность на сайте работодателя: данные собираются автоматически.</p>
+</footer>
+
+<template id="card">
+  <li class="card">
+    <div class="card__head">
+      <div class="card__titles">
+        <div class="card__badges"></div>
+        <h2 class="card__title"><a target="_blank" rel="noopener"></a></h2>
+        <p class="card__employer"></p>
+      </div>
+      <div class="card__actions">
+        <button class="icon fav" type="button" aria-label="В избранное" title="В избранное">☆</button>
+        <button class="icon hide" type="button" aria-label="Скрыть" title="Скрыть">✕</button>
+      </div>
+    </div>
+    <dl class="card__facts">
+      <div><dt>Зарплата</dt><dd class="f-salary"></dd></div>
+      <div><dt>Подразделение</dt><dd class="f-dept"></dd></div>
+      <div><dt>Условия</dt><dd class="f-cond"></dd></div>
+    </dl>
+    <details class="card__more">
+      <summary>Описание</summary>
+      <p class="card__desc"></p>
+    </details>
+    <div class="card__foot">
+      <span class="card__source"></span>
+      <span class="card__date"></span>
+      <a class="card__apply" target="_blank" rel="noopener">Открыть</a>
+    </div>
+  </li>
+</template>
+
+<script src="app.js"></script>
+</body>
+</html>
